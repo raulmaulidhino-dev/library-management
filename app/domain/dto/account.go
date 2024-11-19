@@ -27,9 +27,9 @@ func (o *AccountProfileResp) FromPerson(person *dao.Person) {
 	if person.Gender == nil {
 		gender = "-"
 	} else if *person.Gender == domain.GenderFemale {
-		gender = "wanita"
+		gender = "f"
 	} else {
-		gender = "pria"
+		gender = "m"
 	}
 
 	var age float64

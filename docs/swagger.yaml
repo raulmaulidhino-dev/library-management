@@ -29,6 +29,30 @@ definitions:
       gender:
         type: string
     type: object
+  dto.AuthorCreateReq:
+    properties:
+      birth_date:
+        type: string
+      fullname:
+        type: string
+      gender:
+        type: string
+      id:
+        type: integer
+    required:
+    - birth_date
+    type: object
+  dto.AuthorCreateResp:
+    properties:
+      age:
+        type: integer
+      fullname:
+        type: string
+      gender:
+        type: string
+      id:
+        type: integer
+    type: object
   dto.ErrorResponse:
     properties:
       errors: {}
@@ -67,10 +91,19 @@ definitions:
     - fullname
     - gender
     type: object
-  dto.PublishersCreateReq:
+  dto.PublisherCreateReq:
     properties:
       city:
         type: string
+      name:
+        type: string
+    type: object
+  dto.PublisherCreateResp:
+    properties:
+      city:
+        type: string
+      id:
+        type: integer
       name:
         type: string
     type: object
@@ -83,11 +116,35 @@ definitions:
         example: true
         type: boolean
     type: object
+  dto.SuccessResponse-array_dto_AuthorCreateResp:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.AuthorCreateResp'
+        type: array
+      message:
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
   dto.SuccessResponse-array_dto_PersonDetailResp:
     properties:
       data:
         items:
           $ref: '#/definitions/dto.PersonDetailResp'
+        type: array
+      message:
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  dto.SuccessResponse-array_dto_PublisherCreateResp:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.PublisherCreateResp'
         type: array
       message:
         type: string
@@ -115,6 +172,26 @@ definitions:
         example: true
         type: boolean
     type: object
+  dto.SuccessResponse-dto_AuthorCreateReq:
+    properties:
+      data:
+        $ref: '#/definitions/dto.AuthorCreateReq'
+      message:
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  dto.SuccessResponse-dto_AuthorCreateResp:
+    properties:
+      data:
+        $ref: '#/definitions/dto.AuthorCreateResp'
+      message:
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
   dto.SuccessResponse-dto_PersonDetailResp:
     properties:
       data:
@@ -125,10 +202,20 @@ definitions:
         example: true
         type: boolean
     type: object
-  dto.SuccessResponse-dto_PublishersCreateReq:
+  dto.SuccessResponse-dto_PublisherCreateReq:
     properties:
       data:
-        $ref: '#/definitions/dto.PublishersCreateReq'
+        $ref: '#/definitions/dto.PublisherCreateReq'
+      message:
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  dto.SuccessResponse-dto_PublisherCreateResp:
+    properties:
+      data:
+        $ref: '#/definitions/dto.PublisherCreateResp'
       message:
         type: string
       success:
@@ -210,6 +297,154 @@ paths:
           schema:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Account login
+  /authors:
+    get:
+      description: Get a list of author.
+      parameters:
+      - description: Author's name
+        in: query
+        name: q
+        type: string
+      - description: Data offset
+        in: query
+        name: s
+        type: integer
+      - description: Data limit
+        in: query
+        name: l
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SuccessResponse-array_dto_AuthorCreateResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Get a list of author
+    post:
+      consumes:
+      - application/json
+      description: Create new Author.
+      parameters:
+      - description: Author's detail
+        in: body
+        name: newItem
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AuthorCreateReq'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.SuccessResponse-dto_AuthorCreateReq'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create new Author
+  /authors/{id}:
+    get:
+      description: Get a author's detail.
+      parameters:
+      - description: Author's ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SuccessResponse-dto_AuthorCreateResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Get a author's detail
+    put:
+      consumes:
+      - application/json
+      description: Update a author's detail.
+      parameters:
+      - description: Author's ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Author's detail
+        in: body
+        name: detail
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AuthorCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SuccessResponse-any'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update a author's detail
   /persons:
     get:
       description: Get a list of person.
@@ -326,24 +561,63 @@ paths:
       - BearerAuth: []
       summary: Update a person's detail
   /publishers:
+    get:
+      description: Get a list of publishers.
+      parameters:
+      - description: Publisher's name
+        in: query
+        name: q
+        type: string
+      - description: Data offset
+        in: query
+        name: s
+        type: integer
+      - description: Data limit
+        in: query
+        name: l
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SuccessResponse-array_dto_PublisherCreateResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Get a list of publishers
     post:
       consumes:
       - application/json
       description: Create new Publisher.
       parameters:
-      - description: Publishers's detail
+      - description: Publisher's detail
         in: body
         name: newItem
         required: true
         schema:
-          $ref: '#/definitions/dto.PublishersCreateReq'
+          $ref: '#/definitions/dto.PublisherCreateReq'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/dto.SuccessResponse-dto_PublishersCreateReq'
+            $ref: '#/definitions/dto.SuccessResponse-dto_PublisherCreateReq'
         "401":
           description: Unauthorized
           schema:
@@ -359,6 +633,81 @@ paths:
       security:
       - BearerAuth: []
       summary: Create new Publisher
+  /publishers/{id}:
+    get:
+      description: Get a publisher's detail.
+      parameters:
+      - description: Publisher's ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SuccessResponse-dto_PublisherCreateResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Get a publisher's detail
+    put:
+      consumes:
+      - application/json
+      description: Update a publisher's detail.
+      parameters:
+      - description: Publisher's ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Publisher's detail
+        in: body
+        name: detail
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PublisherCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SuccessResponse-any'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update a publisher's detail
 securityDefinitions:
   BearerAuth:
     description: Bearer auth containing JWT

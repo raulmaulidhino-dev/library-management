@@ -39,7 +39,8 @@ var (
 
 	accountRepo *repository.AccountRepository
 	personRepo  *repository.PersonRepository
-	publishersRepo *repository.PublishersRepository
+	publisherRepo *repository.PublisherRepository
+	authorRepo *repository.AuthorRepository
 )
 
 func TestMain(m *testing.M) {
@@ -65,7 +66,8 @@ func setup() {
 	repository.SetupRepositories()
 	accountRepo = repository.GetAccountRepo()
 	personRepo = repository.GetPersonRepo()
-	publishersRepo = repository.GetPublishersRepo()
+	publisherRepo = repository.GetPublisherRepo()
+	authorRepo = repository.GetAuthorRepo()
 
 	a := createDummyAccount()
 	dummyAdmin = createDummyProfile(a)
@@ -82,7 +84,8 @@ func teardownDB() {
 	_ = db.Migrator().DropTable(
 		&dao.Account{},
 		&dao.Person{},
-		&dao.Publishers{},
+		&dao.Publisher{},
+		&dao.Author{},
 	)
 }
 
@@ -90,7 +93,8 @@ func setupDB() {
 	_ = db.AutoMigrate(
 		&dao.Account{},
 		&dao.Person{},
-		&dao.Publishers{},
+		&dao.Publisher{},
+		&dao.Author{},
 	)
 }
 

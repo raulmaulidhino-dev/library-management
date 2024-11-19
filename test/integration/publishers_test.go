@@ -10,16 +10,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Create_Success(t *testing.T) {
-	req := dto.PublishersCreateReq{
+func Test_Create_Publisher_Success(t *testing.T) {
+	req := dto.PublisherCreateReq{
 		Name: util.RandomStringAlpha(8),
 		City: util.RandomStringAlpha(10),
 	}
 
-	w := doTest("POST", server.RootPublishers, req, createAuthAccessToken(dummyAdmin.Account.Username))
+	w := doTest("POST", server.RootPublisher, req, createAuthAccessToken(dummyAdmin.Account.Username))
 	assert.Equal(t, 201, w.Code)
 
-	var resp dto.SuccessResponse[dto.PublishersCreateResp]
+	var resp dto.SuccessResponse[dto.PublisherCreateResp]
 	err := json.Unmarshal(w.Body.Bytes(), &resp)
 	if assert.Nil(t, err) {
 		data := resp.Data
@@ -27,7 +27,7 @@ func Test_Create_Success(t *testing.T) {
 		assert.Equal(t, req.Name, data.Name)
 		assert.Equal(t, req.City, data.City)
 
-		item, _ := publishersRepo.GetByID(uint(data.ID))
+		item, _ := publisherRepo.GetByID(uint(data.ID))
 		if assert.NotNil(t, item) {
 			assert.Equal(t, req.Name, item.Name)
             assert.Equal(t, req.City, item.City)
@@ -35,12 +35,12 @@ func Test_Create_Success(t *testing.T) {
 	}
 }
 
-func TestPublishers_Create_ErrorUnauthorized(t *testing.T) {
-	req := dto.PublishersCreateReq{
+func TestPublisher_Create_ErrorUnauthorized(t *testing.T) {
+	req := dto.PublisherCreateReq{
 		Name: util.RandomStringAlpha(8),
 		City: util.RandomStringAlpha(10),
 	}
 
-	w := doTest("POST", server.RootPublishers, req, "asdf")
+	w := doTest("POST", server.RootPublisher, req, "asdf")
 	assert.Equal(t, 401, w.Code)
 }

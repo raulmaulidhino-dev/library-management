@@ -5,7 +5,8 @@ const (
 
 	RootAccount   = rootPath + "/accounts"
 	RootPerson    = rootPath + "/persons"
-	RootPublishers = rootPath + "/publishers"
+	RootPublisher = rootPath + "/publishers"
+	RootAuthor = rootPath + "/authors"
 
 	PathLogin = "/login"
 )

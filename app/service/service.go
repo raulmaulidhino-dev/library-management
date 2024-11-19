@@ -8,13 +8,15 @@ import (
 var (
 	accountService *AccountService
 	personService  *PersonService
-	publishersService *PublishersService
+	publisherService *PublisherService
+	authorService *AuthorService
 )
 
 func SetupServices(cfg *config.Config) {
 	accountService = newAccountService(cfg, repository.GetAccountRepo())
 	personService = newPersonService(repository.GetPersonRepo())
-	publishersService = newPublishersService(repository.GetPublishersRepo())
+	publisherService = newPublisherService(repository.GetPublisherRepo())
+	authorService = newAuthorService(repository.GetAuthorRepo())
 }
 
 func GetAccountService() *AccountService {
@@ -29,6 +31,10 @@ func GetPersonService() *PersonService {
 	return personService
 }
 
-func GetPublishersService() *PublishersService {
-	return publishersService
+func GetPublisherService() *PublisherService {
+	return publisherService
+}
+
+func GetAuthorService() *AuthorService {
+    return authorService
 }

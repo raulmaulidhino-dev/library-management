@@ -3,12 +3,14 @@ package util
 import (
 	"crypto/aes"
 	"crypto/cipher"
-	"crypto/rand"
+	cryptorand "crypto/rand"
+	mathrand "math/rand"
 	"encoding/base64"
 	"fmt"
 	"io"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -21,7 +23,7 @@ func UUIDFromString(stringUUID string) (uuid.UUID, error) {
 func RandomNumber(length int) string {
 	otpChars := "1234567890"
 	buffer := make([]byte, length)
-	_, _ = rand.Read(buffer)
+	_, _ = cryptorand.Read(buffer)
 	charsLength := len(otpChars)
 	for i := 0; i < length; i++ {
 		buffer[i] = otpChars[int(buffer[i])%charsLength]
@@ -32,7 +34,7 @@ func RandomNumber(length int) string {
 func RandomString(length int) string {
 	chars := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	bytes := make([]byte, length)
-	_, _ = rand.Read(bytes)
+	_, _ = cryptorand.Read(bytes)
 	for i, b := range bytes {
 		bytes[i] = chars[b%byte(len(chars))]
 	}
@@ -42,7 +44,7 @@ func RandomString(length int) string {
 func RandomStringAlpha(length int) string {
 	chars := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	bytes := make([]byte, length)
-	_, _ = rand.Read(bytes)
+	_, _ = cryptorand.Read(bytes)
 	for i, b := range bytes {
 		bytes[i] = chars[b%byte(len(chars))]
 	}
@@ -71,7 +73,7 @@ func EncryptAESGCM(plain string, secret string) (string, error) {
 	}
 
 	iv := make([]byte, 12)
-	if _, err = io.ReadFull(rand.Reader, iv); err != nil {
+	if _, err = io.ReadFull(cryptorand.Reader, iv); err != nil {
 		return "", err
 	}
 
@@ -161,4 +163,21 @@ func RemoveDash(str string) string {
 func SanitiseName(str string) string {
 	re := regexp.MustCompile(`[:;|~!@#$%^*+={}\[\]\/"]+`)
 	return re.ReplaceAllString(str, "")
+}
+
+func RandomBirthDate() time.Time {
+	now := time.Now()
+	// Calculate the range in days (18–60 years ago)
+	minDays := 18 * 365
+	maxDays := 60 * 365
+	randomDays := mathrand.Intn(maxDays-minDays) + minDays
+
+	// Subtract random days from today's date
+	return now.AddDate(0, 0, -randomDays)
+}
+
+// Generate a random gender
+func RandomGender() string {
+	genders := []string{"m", "f"}
+	return genders[mathrand.Intn(len(genders))]
 }

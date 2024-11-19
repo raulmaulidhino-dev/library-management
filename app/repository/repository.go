@@ -5,14 +5,16 @@ import "base-gin/storage"
 var (
 	accountRepo *AccountRepository
 	personRepo  *PersonRepository
-	publishersRepo *PublishersRepository
+	publisherRepo *PublisherRepository
+	authorRepo *AuthorRepository
 )
 
 func SetupRepositories() {
 	db := storage.GetDB()
 	accountRepo = newAccountRepository(db)
 	personRepo = newPersonRepository(db)
-	publishersRepo = newPublishersRepository(db)
+	publisherRepo = newPublisherRepository(db)
+	authorRepo = newAuthorRepository(db)
 }
 
 func GetAccountRepo() *AccountRepository {
@@ -23,6 +25,10 @@ func GetPersonRepo() *PersonRepository {
 	return personRepo
 }
 
-func GetPublishersRepo() *PublishersRepository {
-	return publishersRepo
+func GetPublisherRepo() *PublisherRepository {
+	return publisherRepo
+}
+
+func GetAuthorRepo() *AuthorRepository {
+    return authorRepo
 }

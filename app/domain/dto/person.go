@@ -18,9 +18,9 @@ func (o *PersonDetailResp) FromEntity(item *dao.Person) {
 	if item.Gender == nil {
 		gender = "-"
 	} else if *item.Gender == domain.GenderFemale {
-		gender = "wanita"
+		gender = "f"
 	} else {
-		gender = "pria"
+		gender = "m"
 	}
 
 	var age float64
